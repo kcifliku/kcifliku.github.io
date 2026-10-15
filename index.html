@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>Klevi Cifliku Portfolio</title>
+<meta name="description" content="Electrical engineering portfolio of Klevi Cifliku: power electronics, PCB design, controls and drone research.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: engineering-drawing feel. Name with a dimension line, a project index like a drawing register,
+   then each project as a one-page datasheet: spec table left, write-up right, block diagram underneath. */
+:root{
+  --paper:#F1F3F5;
+  --surface:#FFFFFF;
+  --ink:#141920;
+  --muted:#586270;
+  --rule:#D3D9E0;
+  --copper:#A24E28;
+  --copper-soft:#F1E2D8;
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --s-1:.8125rem; --s0:1rem; --s1:1.1875rem; --s2:1.5rem; --s3:2.125rem; --s4:clamp(2.75rem,8vw,5.5rem);
+  --max:1120px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0E1217; --surface:#151B22; --ink:#E6E9ED; --muted:#98A2AF; --rule:#28303A;
+    --copper:#E3895A; --copper-soft:#36221A; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0E1217; --surface:#151B22; --ink:#E6E9ED; --muted:#98A2AF; --rule:#28303A;
+  --copper:#E3895A; --copper-soft:#36221A; color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--f-body); font-size:var(--s0); line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit; text-decoration-color:var(--copper); text-underline-offset:3px}
+a:hover{color:var(--copper)}
+:focus-visible{outline:2px solid var(--copper); outline-offset:3px; border-radius:2px}
+.mono{font-family:var(--f-mono); font-variant-numeric:tabular-nums}
+.wrap{
+  max-width:var(--max); margin:0 auto;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+}
+h1,h2,h3{font-family:var(--f-display); text-wrap:balance; margin:0; line-height:1.05}
+.label{
+  font-family:var(--f-mono); font-size:.75rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);
+}
+
+/* Top bar */
+.bar{
+  position:sticky; top:env(safe-area-inset-top, 0px); z-index:10;
+  background:color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--rule);
+}
+.bar .wrap{display:flex; align-items:center; justify-content:space-between; gap:16px; padding-block:12px; flex-wrap:wrap}
+.bar .mark{font-family:var(--f-display); font-weight:700; font-stretch:112%; letter-spacing:.01em; text-decoration:none}
+.bar nav{display:flex; gap:20px; flex-wrap:wrap}
+.bar nav a{font-family:var(--f-mono); font-size:var(--s-1); text-decoration:none; color:var(--muted)}
+.bar nav a:hover{color:var(--copper)}
+
+/* Hero */
+.hero .wrap{padding-block:72px 56px; display:grid; gap:28px}
+.hero h1{font-size:var(--s4); font-weight:800; font-stretch:118%; letter-spacing:-.02em}
+.dim{position:relative; max-width:760px; height:28px; margin-top:4px}
+.dim::before{content:""; position:absolute; left:0; right:0; top:13px; border-top:1px solid var(--copper)}
+.dim .end{position:absolute; top:6px; width:1px; height:16px; background:var(--copper)}
+.dim .end.l{left:0} .dim .end.r{right:0}
+.dim .end::after{content:""; position:absolute; top:4px; width:0; height:0; border-top:4px solid transparent; border-bottom:4px solid transparent}
+.dim .end.l::after{left:1px; border-right:7px solid var(--copper)}
+.dim .end.r::after{right:1px; border-left:7px solid var(--copper)}
+.dim span{
+  position:absolute; left:50%; top:4px; transform:translateX(-50%);
+  background:var(--paper); padding:0 10px; font-family:var(--f-mono); font-size:.75rem; color:var(--copper); white-space:nowrap;
+}
+.hero .lede{font-size:var(--s1); max-width:58ch; margin:0}
+.facts{display:flex; flex-wrap:wrap; gap:10px 28px; margin:0; padding:0; list-style:none}
+.facts li{display:grid; gap:2px}
+.facts strong{font-weight:500}
+
+/* Sections */
+section{border-top:1px solid var(--rule)}
+section > .wrap{padding-block:56px}
+.sec-head{display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:28px}
+.sec-head h2{font-size:var(--s3); font-weight:700; font-stretch:105%}
+
+/* Project register */
+.register{overflow-x:auto; border:1px solid var(--rule); background:var(--surface)}
+.register table{width:100%; border-collapse:collapse; min-width:560px}
+.register th,.register td{text-align:left; padding:12px 16px; border-bottom:1px solid var(--rule); vertical-align:top}
+.register tr:last-child td{border-bottom:0}
+.register th{font-family:var(--f-mono); font-weight:400; font-size:.75rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+.register td:first-child{font-family:var(--f-mono); font-size:var(--s-1); white-space:nowrap; color:var(--muted)}
+.register a{text-decoration:none; font-weight:600}
+.register td:last-child{color:var(--muted); font-size:var(--s-1)}
+
+/* Project datasheets */
+.projects{display:grid; gap:40px; margin-top:40px}
+.proj{background:var(--surface); border:1px solid var(--rule); scroll-margin-top:80px}
+.proj-head{padding:24px 24px 20px; border-bottom:1px solid var(--rule); display:grid; gap:8px}
+.proj-head .row{display:flex; gap:12px 20px; flex-wrap:wrap; align-items:center}
+.proj-head h3{font-size:var(--s2); font-weight:700; font-stretch:104%}
+.tag{font-family:var(--f-mono); font-size:.75rem; padding:2px 8px; background:var(--copper-soft); color:var(--copper)}
+.tools{margin:0; color:var(--muted); font-size:var(--s-1)}
+.proj-body{display:grid; grid-template-columns:minmax(0,320px) minmax(0,1fr)}
+.specs{margin:0; border-right:1px solid var(--rule)}
+.specs div{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.3fr); gap:12px; padding:10px 24px; border-bottom:1px solid var(--rule)}
+.specs div:last-child{border-bottom:0}
+.specs dt{font-family:var(--f-mono); font-size:.75rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); padding-top:2px}
+.specs dd{margin:0; font-family:var(--f-mono); font-size:var(--s-1); font-variant-numeric:tabular-nums}
+.desc{padding:20px 24px 24px; min-width:0}
+.desc p{margin:0 0 12px; max-width:65ch}
+.desc ul{margin:0; padding-left:1.1em; display:grid; gap:8px; max-width:65ch}
+.desc li::marker{color:var(--copper)}
+
+/* Block diagram strip */
+.chain{border-top:1px solid var(--rule); padding:16px 24px; display:flex; flex-wrap:wrap; align-items:center; gap:8px 6px}
+.chain .label{margin-right:10px}
+.blk{font-family:var(--f-mono); font-size:.8125rem; border:1px solid var(--ink); padding:4px 10px; background:var(--paper); white-space:nowrap}
+.blk.hot{border-color:var(--copper); color:var(--copper)}
+.arr{color:var(--copper); font-family:var(--f-mono); font-size:.8125rem; padding:0 2px}
+.chain .br{flex-basis:100%; height:0}
+
+/* Experience */
+.roles{display:grid; gap:0; border-top:1px solid var(--rule)}
+.role{display:grid; grid-template-columns:minmax(0,220px) minmax(0,1fr); gap:24px; padding-block:24px; border-bottom:1px solid var(--rule)}
+.role h3{font-size:var(--s1); font-weight:700; font-stretch:104%; margin-bottom:4px}
+.role .org{color:var(--muted); margin:0 0 10px}
+.role ul{margin:0; padding-left:1.1em; display:grid; gap:6px; max-width:65ch}
+.role li::marker{color:var(--copper)}
+
+/* Skills */
+.skills{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr)); gap:28px}
+.skills h3{font-family:var(--f-mono); font-weight:400; font-size:.75rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:10px}
+.skills ul{list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:6px}
+.skills li{font-size:var(--s-1); border:1px solid var(--rule); background:var(--surface); padding:3px 10px}
+.course{margin-top:32px; color:var(--muted); max-width:80ch; font-size:var(--s-1)}
+
+/* Contact */
+.contact .wrap{display:grid; gap:20px}
+.contact h2{font-size:var(--s3); font-weight:700; font-stretch:105%}
+.contact-row{display:flex; flex-wrap:wrap; gap:12px 32px; align-items:center}
+.email{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.email code{font-family:var(--f-mono); font-size:var(--s1); user-select:all; word-break:break-all}
+button.copy{
+  font:500 var(--s-1) var(--f-mono); color:var(--ink); background:var(--surface);
+  border:1px solid var(--ink); padding:6px 12px; cursor:pointer;
+}
+button.copy:hover{border-color:var(--copper); color:var(--copper)}
+footer .wrap{padding-block:24px; color:var(--muted); font-size:var(--s-1); border-top:1px solid var(--rule)}
+
+
+.flight{border-top:1px solid var(--rule); padding:16px 24px 20px; display:grid; gap:10px}
+.flight video{display:block; width:100%; max-width:100%; height:auto; aspect-ratio:832/464; background:var(--ink); border:1px solid var(--rule)}
+.flight .cap{margin:0; font-size:.75rem; color:var(--muted)}
+.readout{border-top:1px solid var(--rule); padding:14px 24px; display:flex; flex-wrap:wrap; gap:10px 28px; align-items:baseline}
+.readout .label{flex-basis:100%}
+.rd{display:grid; gap:2px}
+.rd span{font-family:var(--f-mono); font-size:.6875rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted)}
+.rd b{font-family:var(--f-mono); font-weight:500; font-size:var(--s1); font-variant-numeric:tabular-nums; color:var(--copper)}
+.bode{border-top:1px solid var(--rule); padding:16px 24px 18px; display:grid; gap:10px}
+.bode svg{display:block; width:100%; max-width:640px; height:auto}
+.bode .g{stroke:var(--rule); stroke-width:1}
+.bode .t{font-family:var(--f-mono); font-size:11px; fill:var(--muted)}
+.bode .acc{fill:var(--copper)}
+.bode .m{stroke:var(--copper); stroke-width:1; stroke-dasharray:4 4}
+.bode .band{fill:var(--copper-soft)}
+.bode .curve{fill:none; stroke:var(--ink); stroke-width:2}
+.bode .pt{fill:var(--copper)}
+/* Build gallery */
+.gallery-wrap{border-top:1px solid var(--rule); padding:16px 24px 24px; display:grid; gap:12px}
+.gallery{columns:3 220px; column-gap:12px}
+.gallery figure{margin:0 0 12px; break-inside:avoid; display:grid; gap:6px}
+.ph{display:block; width:100%; padding:0; border:1px solid var(--rule); background:var(--paper); cursor:zoom-in}
+.ph img{display:block; width:100%; height:auto}
+.ph:hover{border-color:var(--copper)}
+.gallery figcaption{font-size:.75rem; color:var(--muted); line-height:1.45}
+.lb{position:fixed; inset:0; z-index:50; background:color-mix(in srgb, var(--paper) 94%, transparent);
+  display:grid; place-items:center; gap:10px; align-content:center;
+  padding:max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px))}
+.lb img{max-width:100%; max-height:80vh; width:auto; height:auto; border:1px solid var(--rule)}
+.lb p{margin:0; font-size:var(--s-1); color:var(--muted); text-align:center; max-width:60ch}
+.lb button{font:500 var(--s-1) var(--f-mono); color:var(--ink); background:var(--surface); border:1px solid var(--ink); padding:6px 12px; cursor:pointer}
+@media (max-width:760px){.gallery-wrap,.flight,.readout,.bode{padding-left:16px; padding-right:16px}}
+@media (max-width:760px){
+  .proj-body{grid-template-columns:1fr}
+  .specs{border-right:0; border-bottom:1px solid var(--rule)}
+  .role{grid-template-columns:1fr; gap:8px}
+  .hero .wrap{padding-block:48px 40px}
+  .proj-head,.desc,.chain{padding-left:16px; padding-right:16px}
+  .specs div{padding-left:16px; padding-right:16px}
+}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="mark" href="#top">K. Cifliku</a>
+    <nav aria-label="Sections">
+      <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="wrap">
+      <span class="label">Electrical Engineering · NJIT</span>
+      <h1>Klevi Cifliku</h1>
+      <div class="dim" aria-hidden="true"><i class="end l"></i><span>B.S.E.E. · SEP 2023 — MAY 2027</span><i class="end r"></i></div>
+      <p class="lede">I design power electronics and PCBs, build drones for research, and draw industrial control systems. This page collects the hardware I've designed, tested, and flown.</p>
+      <ul class="facts">
+        <li><span class="label">Focus</span><strong>Power · PCB · Controls</strong></li>
+        <li><span class="label">GPA</span><strong class="mono">3.9</strong></li>
+        <li><span class="label">Now</span><strong>Automation intern, AAK USA</strong></li>
+        <li><span class="label">Based in</span><strong>New Jersey</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <section id="projects" aria-labelledby="projects-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="projects-h">Projects</h2>
+        <span class="label">5 entries · newest research first</span>
+      </div>
+
+      <div class="register">
+        <table>
+          <thead><tr><th>Date</th><th>Project</th><th>Focus</th></tr></thead>
+          <tbody>
+            <tr><td>2025 — now</td><td><a href="#drone">Autonomous Data-Collection Drone</a></td><td>Research · power &amp; propulsion</td></tr>
+            <tr><td>May 2026</td><td><a href="#rocksat">NASA RockSat Langmuir Probe Payload</a></td><td>Power integrity · analog front end</td></tr>
+            <tr><td>Apr 2026</td><td><a href="#solar">12 V / 10 A Solar Charge Controller</a></td><td>DC/DC design · embedded</td></tr>
+            <tr><td>Jan 2026</td><td><a href="#pdb">High-Power Distribution Board</a></td><td>High-current PCB · sensing</td></tr>
+            <tr><td>Oct 2025</td><td><a href="#voice">Multistage Voice Modulator</a></td><td>Analog audio · filters · ESP32</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="projects">
+
+        <article class="proj" id="drone">
+          <div class="proj-head">
+            <div class="row"><span class="label">Jun 2025 — present</span><span class="tag">Research</span></div>
+            <h3>Autonomous Data-Collection Drone</h3>
+            <p class="tools">NJIT Networking Research Laboratory · Creo Parametric · eCalc · Flight testing</p>
+          </div>
+          <div class="proj-body">
+            <dl class="specs">
+              <div><dt>Role</dt><dd>Research assistant</dd></div>
+              <div><dt>Mission</dt><dd>Autonomous data collection</dd></div>
+              <div><dt>Owned</dt><dd>Power &amp; propulsion subsystem</dd></div>
+              <div><dt>Sizing</dt><dd>Thrust-to-weight, current draw, voltage</dd></div>
+              <div><dt>Frame</dt><dd>Quadcopter, X layout</dd></div>
+              <div><dt>Flight ctrl</dt><dd>Pixhawk 2.4.8</dd></div>
+              <div><dt>Motors</dt><dd>T-Motor MN3110 KV700</dd></div>
+              <div><dt>Props</dt><dd>12 × 4 in, carbon fiber</dd></div>
+              <div><dt>Battery</dt><dd>4S, 10,000 mAh</dd></div>
+              <div><dt>Power</dt><dd>Matek PDB-HEX, XT60</dd></div>
+              <div><dt>Nav</dt><dd>GPS + compass module</dd></div>
+              <div><dt>Radio</dt><dd>FlySky FS-iA6B receiver</dd></div>
+              <div><dt>Verified</dt><dd>eCalc + propulsion simulations</dd></div>
+              <div><dt>Headroom</dt><dd>Payload space, compute upgrade</dd></div>
+              <div><dt>CAD</dt><dd>Creo Parametric</dd></div>
+              <div><dt>Status</dt><dd>Flight tested</dd></div>
+            </dl>
+            <div class="desc">
+              <p>A drone built in NJIT's Networking Research Laboratory to fly autonomous data-collection missions. I took it from component models to a flying aircraft, and I was responsible for everything that turns battery energy into thrust.</p>
+              <ul>
+                <li>Modeled the airframe components in Creo Parametric, then fabricated the aircraft and ran flight tests to validate its performance.</li>
+                <li>Selected the motors, propellers, ESCs, battery and power distribution board as one system, sizing each against the thrust-to-weight target, the current each stage draws, and the pack voltage.</li>
+                <li>Ran eCalc and other propulsion simulations before committing to parts, confirming the motors, propellers, ESCs and battery were compatible with each other and with the quadcopter's layout.</li>
+                <li>Checked that every part of the power path stayed within its ratings so the aircraft operates safely and efficiently in flight.</li>
+                <li>Designed in room for full autonomy later: spare payload capacity and mounting space, and margin to upgrade the onboard processing.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="flight">
+            <span class="label">Flight test · 0:51</span>
+            <video controls playsinline preload="metadata" poster="img/drone-flight-poster.jpg" width="832" height="464" aria-label="Indoor test flight of the quadcopter">
+              <source src="video/drone-flight.mp4" type="video/mp4">
+            </video>
+            <p class="cap">Test flight inside an enclosed, netted indoor arena: takeoff, climb, hover and maneuvering.</p>
+          </div>
+          <div class="gallery-wrap">
+            <span class="label">Build log · 7 photos</span>
+            <div class="gallery">
+              <figure><button type="button" class="ph"><img src="img/drone-assembled.jpg" width="1600" height="1200" loading="lazy" alt="Assembled quadcopter on a lab bench with carbon-fiber propellers, landing gear and a FlySky transmitter beside it"></button><figcaption>Assembled, with carbon-fiber props, landing gear and the radio transmitter.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/drone-top-gps.jpg" width="1200" height="1600" loading="lazy" alt="Top-down view of the drone with GPS module mounted at the center"></button><figcaption>Top view with the GPS and compass module mounted over the stack.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/drone-pixhawk-top.jpg" width="1200" height="1600" loading="lazy" alt="Pixhawk flight controller mounted on the center plate of the frame"></button><figcaption>Pixhawk 2.4.8 flight controller on the center plate, before props.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/drone-pdb-hex.jpg" width="1200" height="1600" loading="lazy" alt="Matek PDB-HEX power distribution board held in hand with an XT60 lead soldered on"></button><figcaption>Matek PDB-HEX distribution board with the XT60 battery lead soldered on.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/drone-lower-plate.jpg" width="1200" height="1600" loading="lazy" alt="Lower frame plate with power board and ESC wiring"></button><figcaption>Lower plate: power wiring out to the ESCs on each arm.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/drone-pixhawk-wiring.jpg" width="1200" height="1600" loading="lazy" alt="Hands routing signal leads to the Pixhawk ports"></button><figcaption>Routing signal leads to the Pixhawk ports.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/drone-arm-motor.jpg" width="1200" height="1600" loading="lazy" alt="Frame arm held in hand with a brushless motor mounted at the end"></button><figcaption>Fitting an arm with its brushless motor.</figcaption></figure>
+            </div>
+          </div>
+          <div class="chain" aria-label="Power path">
+            <span class="label">Power path</span>
+            <span class="blk">4S 10,000 mAh</span><span class="arr">→</span>
+            <span class="blk">PDB-HEX</span><span class="arr">→</span>
+            <span class="blk">4 × ESC</span><span class="arr">→</span>
+            <span class="blk">MN3110 KV700</span><span class="arr">→</span>
+            <span class="blk hot">12 × 4 CF props</span>
+          </div>
+        </article>
+
+        <article class="proj" id="rocksat">
+          <div class="proj-head">
+            <div class="row"><span class="label">May 2026</span><span class="tag">NASA · Team</span></div>
+            <h3>NASA RockSat Langmuir Probe Payload</h3>
+            <p class="tools">NJIT RockSat team · Altium Designer · Power &amp; RF electronics · PCB test and validation</p>
+          </div>
+          <div class="proj-body">
+            <dl class="specs">
+              <div><dt>Flight</dt><dd>Suborbital research flight</dd></div>
+              <div><dt>Measures</dt><dd>Ionospheric electron density</dd></div>
+              <div><dt>Sensor</dt><dd>2 × Langmuir probe</dd></div>
+              <div><dt>Boards</dt><dd>Overwatch CEO, Scout ISO, Scout BIAS</dd></div>
+              <div><dt>Rail 1</dt><dd>28 V → 5 V buck</dd></div>
+              <div><dt>Rail 2</dt><dd>5 V → 3.3 V LDO</dd></div>
+              <div><dt>Sweep</dt><dd>Triangle, ±5.2 V, 97.4 Hz</dd></div>
+              <div><dt>Front end</dt><dd>Transimpedance amp → MCU</dd></div>
+              <div><dt>Radio</dt><dd>Digi XBee</dd></div>
+              <div><dt>Scout pack</dt><dd>2S 18650 Li-ion, 7.2 V 3500 mAh</dd></div>
+            </dl>
+            <div class="desc">
+              <p>A NASA-selected suborbital experiment from NJIT that measures electron density in the ionosphere with a pair of Langmuir probes. I worked on the electrical engineering team, testing the boards that power the payload and condition the probe signals.</p>
+              <p>The electronics are split across three boards, designed by teammate Nathanael Gunawan. Overwatch CEO carries the IMU, microSD logging, an XBee radio and the regulators. Scout ISO is a self-contained unit with its own Li-ion pack, an Arduino Nano 33 IoT and a second XBee. Scout BIAS is the analog board that sweeps the probes and reads their current through two SMA connectors.</p>
+              <ul>
+                <li>Verified power integrity by instrumenting the 28 V to 5 V buck converters and the 5 V to 3.3 V low-dropout regulators, confirming stable rails across the payload.</li>
+                <li>Tested the triangular voltage generator that sweeps the bias on one probe pair, measuring a clean 10.4 V peak-to-peak (±5.2 V) triangle at 97.4 Hz on the oscilloscope.</li>
+                <li>Validated the input data of the transimpedance amplifier that converts probe current into a voltage the MCU can sample.</li>
+                <li>Brought up the boards on the bench and in their 3D-printed mounts before integration into the payload housing.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="readout" aria-label="Measured probe sweep">
+            <span class="label">Measured sweep · CH1</span>
+            <div class="rd"><span>Pk-Pk</span><b>10.40 V</b></div>
+            <div class="rd"><span>Max</span><b>5.20 V</b></div>
+            <div class="rd"><span>Period</span><b>10.27 ms</b></div>
+            <div class="rd"><span>Freq</span><b>97.40 Hz</b></div>
+          </div>
+          <div class="chain" aria-label="Power tree and signal chain">
+            <span class="label">Power</span>
+            <span class="blk">28 V bus</span><span class="arr">→</span>
+            <span class="blk">Buck</span><span class="arr">→</span>
+            <span class="blk">5 V</span><span class="arr">→</span>
+            <span class="blk">LDO</span><span class="arr">→</span>
+            <span class="blk">3.3 V</span>
+            <span class="br"></span>
+            <span class="label">Signal</span>
+            <span class="blk">Triangle ±5.2 V</span><span class="arr">→</span>
+            <span class="blk">Langmuir probe</span><span class="arr">→</span>
+            <span class="blk">TIA</span><span class="arr">→</span>
+            <span class="blk hot">MCU</span>
+          </div>
+          <div class="gallery-wrap">
+            <span class="label">Hardware &amp; test log · 11 photos</span>
+            <div class="gallery">
+              <figure><button type="button" class="ph"><img src="img/rs-scope-triangle.jpg" width="1200" height="1600" loading="lazy" alt="Siglent oscilloscope showing a triangle wave, 10.40 V peak-to-peak at 97.4 Hz"></button><figcaption>Probe sweep on the scope: 10.40 V pk-pk, 10.27 ms period, 5.20 V max.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/rs-overwatch-enclosure.jpg" width="1200" height="1600" loading="lazy" alt="Overwatch CEO board populated with IMU, microSD, XBee and regulators inside an aluminum enclosure"></button><figcaption>Overwatch CEO board in its enclosure: IMU, microSD logger, XBee radio and regulators.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/rs-overwatch-bench.jpg" width="1600" height="1200" loading="lazy" alt="Overwatch CEO board wired to an Arduino on the bench"></button><figcaption>Overwatch CEO under test, wired out through its DB-15 connector.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/rs-overwatch-render.jpg" width="1328" height="899" loading="lazy" alt="3D render of the Overwatch CEO V6.7 PCB"></button><figcaption>Overwatch CEO V6.7, 3D render.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/rs-scout-iso.jpg" width="1600" height="1200" loading="lazy" alt="Scout ISO triangular board with Arduino Nano 33 IoT, XBee and two Pololu regulators"></button><figcaption>Scout ISO, populated: Arduino Nano 33 IoT, XBee and two Pololu regulators.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/rs-scout-iso-mount.jpg" width="1200" height="1600" loading="lazy" alt="Scout ISO board mounted in a 3D-printed frame"></button><figcaption>Scout ISO seated in its 3D-printed mount.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/rs-scout-housing.jpg" width="1200" height="1600" loading="lazy" alt="Scout electronics in the housing with the bias board and a 2S 18650 battery pack"></button><figcaption>Scout stack with the BIAS board and its 7.2 V 18650 pack, before closing the housing.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/rs-scout-bias.jpg" width="1200" height="1600" loading="lazy" alt="Scout BIAS board with two SMA probe outputs and a TRACO isolated DC-DC converter"></button><figcaption>Scout BIAS: two SMA probe outputs and a TRACO isolated DC-DC converter.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/rs-bias-render.jpg" width="1195" height="935" loading="lazy" alt="3D render of the Scout BIAS V6.7 PCB"></button><figcaption>Scout BIAS V6.7, 3D render.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/rs-iso-render.jpg" width="873" height="960" loading="lazy" alt="3D render of the Scout ISO V1.0 PCB"></button><figcaption>Scout ISO V1.0, 3D render.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/rs-bench-prototype.jpg" width="1600" height="1200" loading="lazy" alt="Lab bench with breadboard prototypes, XBee radios and a Siglent bench power supply at 3.3 V and 5 V"></button><figcaption>Breadboard bring-up of the radio and logging links, powered at 3.3 V and 5 V.</figcaption></figure>
+            </div>
+          </div>
+        </article>
+
+        <article class="proj" id="solar">
+          <div class="proj-head">
+            <div class="row"><span class="label">Apr 2026</span><span class="tag">Design</span></div>
+            <h3>12 V / 10 A Solar Charge Controller</h3>
+            <p class="tools">Altium Designer · Power electronics · Embedded systems · PCB design</p>
+          </div>
+          <div class="proj-body">
+            <dl class="specs">
+              <div><dt>Rating</dt><dd>12 V / 10 A</dd></div>
+              <div><dt>Topology</dt><dd>Synchronous buck</dd></div>
+              <div><dt>Switches</dt><dd>2 × PSMN5R2-60YLX</dd></div>
+              <div><dt>Gate driver</dt><dd>LM5109B half-bridge</dd></div>
+              <div><dt>Inductor</dt><dd>47 µH</dd></div>
+              <div><dt>Current sense</dt><dd>2 × 3 mΩ shunt, INA2181</dd></div>
+              <div><dt>Load switch</dt><dd>High-side P-FET, SMBJ24A TVS</dd></div>
+              <div><dt>MCU</dt><dd>STM32L072</dd></div>
+              <div><dt>5 V rail</dt><dd>LMR33630 buck → USB-A</dd></div>
+              <div><dt>3.3 V rail</dt><dd>AP2210 LDO</dd></div>
+              <div><dt>Expansion</dt><dd>UEXT (UART / I²C / SPI), SWD, RJ</dd></div>
+              <div><dt>Schematic</dt><dd>Hierarchical, 3 sheets</dd></div>
+            </dl>
+            <div class="desc">
+              <p>A charge controller that takes energy from a solar panel, steps it down to charge a 12 V battery at up to 10 A, and switches power out to a load. I split the design into three hierarchical schematic sheets, DC/DC, MCU and Power, tied together by a top-level sheet, then laid out the board in Altium.</p>
+              <ul>
+                <li>Designed a synchronous buck power stage: two PSMN5R2-60YLX MOSFETs driven by an LM5109B half-bridge gate driver with a bootstrap supply, a 47 µH inductor, 1200 µF of input and 820 µF of output bulk capacitance, and a blade fuse on the battery output.</li>
+                <li>Measured charge and load current with 3 mΩ shunts feeding an INA2181 dual current-sense amplifier, with its reference set from the MCU's DAC. Resistor dividers report solar and battery voltage, and the MCU can switch the solar divider out.</li>
+                <li>Switched the load with a high-side P-MOSFET under MCU control, protected by an SMBJ24A TVS diode at the load terminal.</li>
+                <li>Generated the housekeeping rails: an LMR33630 buck makes 5 V for a USB-A charging port with ESD protection, and an AP2210 LDO makes 3.3 V for the logic, with a power-good signal back to the MCU.</li>
+                <li>Built the control side around an STM32L072: ADC feedback from the power stage, PWM to the gate driver, a UEXT header for UART, I²C and SPI, SWD programming, an RJ port carrying UART and an external temperature sensor, an onboard 10 k NTC for battery temperature, and five charlieplexed status LEDs on three pins.</li>
+                <li>Laid out the board with wide copper pours on the high-current paths, terminal blocks for solar, battery and load, and test points TP1–TP9 on the key nets for bring-up.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="chain" aria-label="Power path, control loop and auxiliary rails">
+            <span class="label">Power</span>
+            <span class="blk">Solar panel</span><span class="arr">→</span>
+            <span class="blk">Sync buck</span><span class="arr">→</span>
+            <span class="blk">47 µH</span><span class="arr">→</span>
+            <span class="blk">3 mΩ shunt</span><span class="arr">→</span>
+            <span class="blk">Fuse</span><span class="arr">→</span>
+            <span class="blk">12 V battery</span><span class="arr">→</span>
+            <span class="blk">P-FET switch</span><span class="arr">→</span>
+            <span class="blk hot">Load</span>
+            <span class="br"></span>
+            <span class="label">Control</span>
+            <span class="blk">INA2181</span><span class="arr">→</span>
+            <span class="blk">STM32L072</span><span class="arr">→</span>
+            <span class="blk">PWM HS / LS</span><span class="arr">→</span>
+            <span class="blk">LM5109B</span>
+            <span class="br"></span>
+            <span class="label">Aux</span>
+            <span class="blk">LMR33630</span><span class="arr">→</span>
+            <span class="blk">5 V / USB-A</span><span class="arr">→</span>
+            <span class="blk">AP2210</span><span class="arr">→</span>
+            <span class="blk">3.3 V</span>
+          </div>
+          <div class="gallery-wrap">
+            <span class="label">Board &amp; schematics · 7 images</span>
+            <div class="gallery">
+              <figure><button type="button" class="ph"><img src="img/sc-3d-top.jpg" width="1363" height="1224" loading="lazy" alt="3D render of the solar charge controller PCB, top side"></button><figcaption>3D render, top: power stage on the left, MCU top right, terminal blocks along the bottom edge.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/sc-pcb-layout.jpg" width="1404" height="1260" loading="lazy" alt="PCB layout of the solar charge controller showing copper pours"></button><figcaption>Layout: wide copper pours carry the solar, battery and load current.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/sc-3d-bottom.jpg" width="1434" height="1255" loading="lazy" alt="3D render of the bottom side with test points TP1 to TP9"></button><figcaption>Bottom side: test points TP1–TP9 for bring-up and probing.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/sc-top-level.png" width="1600" height="1267" loading="lazy" alt="Top-level hierarchical schematic linking MCU, DC/DC and Power sheets"></button><figcaption>Top-level sheet tying the three subsystems together.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/sc-dcdc.png" width="2058" height="1279" loading="lazy" alt="DC/DC schematic sheet with synchronous buck, gate driver, current sensing and load switch"></button><figcaption>DC/DC sheet: synchronous buck, gate driver, current sense and load switch.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/sc-mcu.png" width="1909" height="1206" loading="lazy" alt="MCU schematic sheet with STM32L072, UEXT, SWD, RJ port, NTC and LEDs"></button><figcaption>MCU sheet: STM32L072, UEXT, SWD, RJ port, NTC and status LEDs.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/sc-power.png" width="1861" height="1179" loading="lazy" alt="Power schematic sheet with LMR33630 buck, AP2210 LDO and USB-A port"></button><figcaption>Power sheet: 5 V buck, 3.3 V LDO and the USB-A port.</figcaption></figure>
+            </div>
+          </div>
+        </article>
+
+        <article class="proj" id="pdb">
+          <div class="proj-head">
+            <div class="row"><span class="label">Jan 2026</span><span class="tag">Designed &amp; fabricated</span></div>
+            <h3>High-Power Distribution Board</h3>
+            <p class="tools">KiCad · Power electronics · PCB fabrication</p>
+          </div>
+          <div class="proj-body">
+            <dl class="specs">
+              <div><dt>Input</dt><dd>5–30 V via XT60</dd></div>
+              <div><dt>Outputs</dt><dd>6, independently fused</dd></div>
+              <div><dt>Protection</dt><dd>Automotive blade fuses</dd></div>
+              <div><dt>Monitor</dt><dd>INA226 over I²C</dd></div>
+              <div><dt>Shunt</dt><dd>5 mΩ Kelvin, WSL4026</dd></div>
+              <div><dt>Aux rail</dt><dd>5 V, LM2596 buck</dd></div>
+            </dl>
+            <div class="desc">
+              <p>A board that takes a 5–30 V battery and splits it into six independent high-current outputs, each with its own fuse, while measuring the total current and voltage. I designed it in KiCad and had it fabricated.</p>
+              <ul>
+                <li>Routed the XT60 battery input through automotive blade fuses to six separate high-current outputs.</li>
+                <li>Added current and voltage monitoring with an INA226 reading a 5 mΩ four-terminal shunt (WSL4026). Kelvin sense traces, I²C pull-ups and local decoupling keep the measurement clean.</li>
+                <li>Designed an LM2596 buck converter that holds a steady 5 V rail across the whole 5–30 V input range, choosing and validating the passives for efficiency, stability and thermal performance.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="chain" aria-label="Power path and sensing">
+            <span class="label">Power</span>
+            <span class="blk">Battery 5–30 V</span><span class="arr">→</span>
+            <span class="blk">XT60</span><span class="arr">→</span>
+            <span class="blk">5 mΩ shunt</span><span class="arr">→</span>
+            <span class="blk">Blade fuses</span><span class="arr">→</span>
+            <span class="blk hot">6 outputs</span>
+            <span class="br"></span>
+            <span class="label">Sense</span>
+            <span class="blk">Kelvin taps</span><span class="arr">→</span>
+            <span class="blk">INA226</span><span class="arr">→</span>
+            <span class="blk">I²C</span>
+            <span class="label" style="margin-left:14px">Aux</span>
+            <span class="blk">LM2596</span><span class="arr">→</span>
+            <span class="blk">5 V</span>
+          </div>
+        </article>
+
+        <article class="proj" id="voice">
+          <div class="proj-head">
+            <div class="row"><span class="label">Oct 2025</span><span class="tag">Team · Built &amp; tested</span></div>
+            <h3>Multistage Voice Modulator</h3>
+            <p class="tools">MATLAB · Multisim · LM358 · LM386 · LM311 · ESP32 · Breadboard prototyping</p>
+          </div>
+          <div class="proj-body">
+            <dl class="specs">
+              <div><dt>Input</dt><dd>Electret microphone</dd></div>
+              <div><dt>Pre-amp</dt><dd>LM358, gain ≈ 100 (40 dB)</dd></div>
+              <div><dt>Band-pass</dt><dd>300 Hz – 3 kHz, −3 dB</dd></div>
+              <div><dt>Modulation</dt><dd>ESP32, digital</dd></div>
+              <div><dt>Effects</dt><dd>Pitch shift, robot / ring mod, echo</dd></div>
+              <div><dt>Power amp</dt><dd>LM386, gain ≈ 200</dd></div>
+              <div><dt>Level meter</dt><dd>8 × LM311 comparator, LED bar</dd></div>
+              <div><dt>Supplies</dt><dd>5 V mic, 9 V analog</dd></div>
+              <div><dt>Simulation</dt><dd>MATLAB, Multisim</dd></div>
+            </dl>
+            <div class="desc">
+              <p>With my team, I designed and built a multistage audio system that captures a voice, cleans it up, changes it digitally, and plays it back through a speaker. The chain runs from an electret microphone through a pre-amplifier, a band-pass filter and an ESP32 modulation stage to a power amplifier, with an LED level display along the way.</p>
+              <ul>
+                <li>Designed the pre-amplifier and band-pass filter around LM358 op-amps to lift the small, noisy microphone signal: a gain of about 100 and −3 dB cutoffs near 300 Hz and 3 kHz, the band that carries speech.</li>
+                <li>Designed an LM386 power amplifier with a gain of about 200 to drive the speaker from the modulated signal.</li>
+                <li>Modeled the stages in MATLAB and Multisim. Multisim has no microphone model, so we drove the input with an AC source and swept it across the frequencies the human voice produces to check gain and filtering.</li>
+                <li>Interfaced the analog front end with the ESP32, which applied the voice effects digitally: pitch shifting, a robot or ring-modulator voice, and echo.</li>
+                <li>Built a comparator-based LED meter with eight LM311s to show signal level.</li>
+                <li>Built the full system on breadboards, with a dual supply running the microphone at 5 V and the rest of the circuit at 9 V, then tested it stage by stage to track down noise and get a working end-to-end prototype.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="bode">
+            <span class="label">Band-pass stage · calculated from R6–R9, C4, C6</span>
+            <svg viewBox="0 0 600 240" role="img" aria-label="Calculated band-pass response, minus 3 dB at about 284 Hz and 2.84 kHz">
+              <line class="g" x1="48.0" y1="14" x2="48.0" y2="206"/><text class="t" x="48.0" y="222" text-anchor="middle">20</text><line class="g" x1="172.9" y1="14" x2="172.9" y2="206"/><text class="t" x="172.9" y="222" text-anchor="middle">100</text><line class="g" x1="258.1" y1="14" x2="258.1" y2="206"/><text class="t" x="258.1" y="222" text-anchor="middle">300</text><line class="g" x1="351.5" y1="14" x2="351.5" y2="206"/><text class="t" x="351.5" y="222" text-anchor="middle">1k</text><line class="g" x1="436.8" y1="14" x2="436.8" y2="206"/><text class="t" x="436.8" y="222" text-anchor="middle">3k</text><line class="g" x1="530.2" y1="14" x2="530.2" y2="206"/><text class="t" x="530.2" y="222" text-anchor="middle">10k</text><line class="g" x1="584.0" y1="14" x2="584.0" y2="206"/><text class="t" x="584.0" y="222" text-anchor="middle">20k</text><line class="g" x1="48" y1="14.0" x2="584" y2="14.0"/><text class="t" x="40" y="18.0" text-anchor="end">0</text><line class="g" x1="48" y1="62.0" x2="584" y2="62.0"/><text class="t" x="40" y="66.0" text-anchor="end">-6</text><line class="g" x1="48" y1="110.0" x2="584" y2="110.0"/><text class="t" x="40" y="114.0" text-anchor="end">-12</text><line class="g" x1="48" y1="158.0" x2="584" y2="158.0"/><text class="t" x="40" y="162.0" text-anchor="end">-18</text><line class="g" x1="48" y1="206.0" x2="584" y2="206.0"/><text class="t" x="40" y="210.0" text-anchor="end">-24</text>
+              <rect class="band" x="253.9" y="14" width="178.7" height="192"/>
+              <line class="m" x1="48" y1="38.0" x2="584" y2="38.0"/>
+              <text class="t acc" x="580" y="32.0" text-anchor="end">−3 dB</text>
+              <path class="curve" d="M48.0,198.6 L52.5,194.6 L56.9,190.6 L61.4,186.7 L65.9,182.7 L70.3,178.7 L74.8,174.8 L79.3,170.8 L83.7,166.9 L88.2,162.9 L92.7,159.0 L97.1,155.0 L101.6,151.1 L106.1,147.2 L110.5,143.3 L115.0,139.4 L119.5,135.5 L123.9,131.6 L128.4,127.8 L132.9,123.9 L137.3,120.1 L141.8,116.3 L146.3,112.5 L150.7,108.8 L155.2,105.1 L159.7,101.4 L164.1,97.7 L168.6,94.1 L173.1,90.5 L177.5,87.0 L182.0,83.5 L186.5,80.1 L190.9,76.7 L195.4,73.4 L199.9,70.2 L204.3,67.0 L208.8,64.0 L213.3,61.0 L217.7,58.1 L222.2,55.3 L226.7,52.6 L231.1,50.0 L235.6,47.5 L240.1,45.1 L244.5,42.8 L249.0,40.7 L253.5,38.6 L257.9,36.7 L262.4,34.9 L266.9,33.3 L271.3,31.7 L275.8,30.3 L280.3,28.9 L284.7,27.7 L289.2,26.6 L293.7,25.6 L298.1,24.7 L302.6,23.9 L307.1,23.2 L311.5,22.6 L316.0,22.1 L320.5,21.6 L324.9,21.3 L329.4,21.0 L333.9,20.8 L338.3,20.7 L342.8,20.6 L347.3,20.7 L351.7,20.8 L356.2,20.9 L360.7,21.2 L365.1,21.5 L369.6,22.0 L374.1,22.5 L378.5,23.1 L383.0,23.8 L387.5,24.5 L391.9,25.4 L396.4,26.4 L400.9,27.5 L405.3,28.7 L409.8,30.0 L414.3,31.4 L418.7,32.9 L423.2,34.6 L427.7,36.3 L432.1,38.2 L436.6,40.2 L441.1,42.4 L445.5,44.6 L450.0,47.0 L454.5,49.4 L458.9,52.0 L463.4,54.7 L467.9,57.5 L472.3,60.4 L476.8,63.3 L481.3,66.4 L485.7,69.5 L490.2,72.8 L494.7,76.0 L499.1,79.4 L503.6,82.8 L508.1,86.3 L512.5,89.8 L517.0,93.4 L521.5,97.0 L525.9,100.6 L530.4,104.3 L534.9,108.0 L539.3,111.8 L543.8,115.5 L548.3,119.3 L552.7,123.1 L557.2,127.0 L561.7,130.8 L566.1,134.7 L570.6,138.6 L575.1,142.5 L579.5,146.4 L584.0,150.3"/>
+              <circle class="pt" cx="253.9" cy="38.4" r="4"/><circle class="pt" cx="432.6" cy="38.4" r="4"/>
+              <text class="t acc" x="261.9" y="56.4">284 Hz</text>
+              <text class="t acc" x="424.6" y="56.4" text-anchor="end">2.84 kHz</text>
+              <text class="t" x="316" y="238" text-anchor="middle">Frequency (Hz)</text>
+              <text class="t" x="12" y="110" text-anchor="middle" transform="rotate(-90 12 110)">dB</text>
+            </svg>
+          </div>
+          <div class="chain" aria-label="Signal chain">
+            <span class="label">Signal</span>
+            <span class="blk">Electret mic</span><span class="arr">→</span>
+            <span class="blk">Pre-amp ×100</span><span class="arr">→</span>
+            <span class="blk">Band-pass 0.3–3 kHz</span><span class="arr">→</span>
+            <span class="blk">ESP32</span><span class="arr">→</span>
+            <span class="blk">LM386 ×200</span><span class="arr">→</span>
+            <span class="blk hot">Speaker</span>
+            <span class="br"></span>
+            <span class="label">Display</span>
+            <span class="blk">Signal level</span><span class="arr">→</span>
+            <span class="blk">8 × LM311</span><span class="arr">→</span>
+            <span class="blk">LED bar</span>
+          </div>
+          <div class="gallery-wrap">
+            <span class="label">Build &amp; simulation · 3 images</span>
+            <div class="gallery">
+              <figure><button type="button" class="ph"><img src="img/vm-breadboard.jpg" width="1294" height="834" loading="lazy" alt="Breadboard prototype of the voice modulator with an ESP32, op-amp stages, LM386 and LED level meter"></button><figcaption>Full breadboard build: ESP32 on the left, analog stages in the middle, LED level meter on the right.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/vm-sch-audio.png" width="1243" height="590" loading="lazy" alt="Multisim schematic of the pre-amplifier, band-pass filter and LM386 power amplifier"></button><figcaption>Multisim: LM358 pre-amp and band-pass, LM386 power amp driving the speaker.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/vm-sch-meter.png" width="1243" height="849" loading="lazy" alt="Multisim schematic of the eight-comparator LM311 LED level meter"></button><figcaption>Multisim: eight LM311 comparators on resistor ladders drive the LED level meter.</figcaption></figure>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="experience" aria-labelledby="exp-h">
+    <div class="wrap">
+      <div class="sec-head"><h2 id="exp-h">Experience</h2></div>
+      <div class="roles">
+        <div class="role">
+          <div><span class="label">Jul 2026 — present</span></div>
+          <div>
+            <h3>Automation Engineering Intern, Electrical Controls</h3>
+            <p class="org">AAK USA Inc. · Newark, NJ</p>
+            <ul>
+              <li>Produced 100+ control schematics in AutoCAD Electrical for GE and Emerson PLC systems, importing and validating I/O tables to meet drafting standards.</li>
+              <li>Configured I/O assignments and wiring from PLC module and field-device datasheets.</li>
+              <li>Checked integration by reviewing PLC logic, inspecting control panels, and verifying field wiring against I/O tables and schematics.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="role">
+          <div><span class="label">Jun 2025 — present</span></div>
+          <div>
+            <h3>Research Assistant</h3>
+            <p class="org">NJIT Networking Research Laboratory · Newark, NJ</p>
+            <ul>
+              <li>Designed, fabricated and flight-tested an autonomous drone for data-collection missions. <a href="#drone">See the project</a>.</li>
+              <li>Owned the power and propulsion subsystem, from component selection to validation.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills" aria-labelledby="skills-h">
+    <div class="wrap">
+      <div class="sec-head"><h2 id="skills-h">Skills</h2></div>
+      <div class="skills">
+        <div>
+          <h3>Design tools</h3>
+          <ul><li>Altium</li><li>KiCad</li><li>LTspice</li><li>Multisim</li><li>MATLAB</li><li>Simulink</li><li>Creo Parametric</li><li>AutoCAD Electrical</li></ul>
+        </div>
+        <div>
+          <h3>Embedded &amp; code</h3>
+          <ul><li>Python</li><li>C++</li><li>Linux</li><li>ROS</li><li>STM32</li><li>ESP32</li><li>Raspberry Pi</li><li>Arduino</li><li>UART / I²C / SPI</li></ul>
+        </div>
+        <div>
+          <h3>Bench</h3>
+          <ul><li>Oscilloscope</li><li>Waveform generator</li><li>Spectrum analyzer</li><li>Multimeter</li><li>Bench power supply</li></ul>
+        </div>
+      </div>
+      <p class="course"><span class="label">Coursework</span><br>Analog &amp; Digital Circuits · Signals &amp; Systems · Electronic Circuit Design · Microprocessors Lab · Semiconductor Devices · Electromagnetic Fields · Machine Learning · Energy Conversion</p>
+    </div>
+  </section>
+
+  <section class="contact" id="contact" aria-labelledby="contact-h">
+    <div class="wrap">
+      <h2 id="contact-h">Get in touch</h2>
+      <div class="contact-row">
+        <div class="email">
+          <code id="email">ciflikuklevi@gmail.com</code>
+          <button class="copy" id="copy-email" type="button">Copy email</button>
+        </div>
+        <a href="https://www.linkedin.com/in/klevi-cifliku-41a1502ab/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="lb" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Photo">
+  <img id="lb-img" alt="">
+  <p id="lb-cap"></p>
+  <button type="button" id="lb-close">Close</button>
+</div>
+
+<footer><div class="wrap">Klevi Cifliku · Electrical Engineering, New Jersey Institute of Technology</div></footer>
+
+<script>
+(function(){
+  var btn=document.getElementById('copy-email');
+  var email=document.getElementById('email');
+  btn.addEventListener('click',function(){
+    var text=email.textContent.trim();
+    function selectIt(){
+      var r=document.createRange(); r.selectNodeContents(email);
+      var s=window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent='Selected, press Ctrl+C';
+    }
+    try{
+      navigator.clipboard.writeText(text).then(function(){
+        btn.textContent='Copied';
+        setTimeout(function(){btn.textContent='Copy email'},1800);
+      },selectIt);
+    }catch(e){selectIt()}
+  });
+})();
+(function(){
+  var lb=document.getElementById('lightbox'), im=document.getElementById('lb-img'), cap=document.getElementById('lb-cap'), close=document.getElementById('lb-close'), last=null;
+  function shut(){lb.hidden=true; im.removeAttribute('src'); if(last) last.focus();}
+  document.querySelectorAll('.ph').forEach(function(b){
+    b.addEventListener('click',function(){
+      var i=b.querySelector('img'); last=b;
+      im.src=i.src; im.alt=i.alt; cap.textContent=b.parentNode.querySelector('figcaption').textContent;
+      lb.hidden=false; close.focus();
+    });
+  });
+  close.addEventListener('click',shut);
+  lb.addEventListener('click',function(e){if(e.target===lb) shut();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape' && !lb.hidden) shut();});
+})();
+</script>
+
+</body>
+</html>
