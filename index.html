@@ -194,6 +194,12 @@ footer .wrap{padding-block:24px; color:var(--muted); font-size:var(--s-1); borde
 .bode .band{fill:var(--copper-soft)}
 .bode .curve{fill:none; stroke:var(--ink); stroke-width:2}
 .bode .pt{fill:var(--copper)}
+.tag.wip{background:transparent; border:1px solid var(--copper); display:inline-flex; align-items:center; gap:6px}
+.tag.wip::before{content:""; width:7px; height:7px; border-radius:50%; background:var(--copper)}
+.next{border-top:1px solid var(--rule); padding:16px 24px; display:grid; gap:10px; background:var(--copper-soft)}
+.next ol{margin:0; padding-left:1.3em; display:grid; gap:8px; max-width:75ch}
+.next li::marker{color:var(--copper); font-family:var(--f-mono)}
+.next b{font-weight:600}
 /* Build gallery */
 .gallery-wrap{border-top:1px solid var(--rule); padding:16px 24px 24px; display:grid; gap:12px}
 .gallery{columns:3 220px; column-gap:12px}
@@ -208,7 +214,7 @@ footer .wrap{padding-block:24px; color:var(--muted); font-size:var(--s-1); borde
 .lb img{max-width:100%; max-height:80vh; width:auto; height:auto; border:1px solid var(--rule)}
 .lb p{margin:0; font-size:var(--s-1); color:var(--muted); text-align:center; max-width:60ch}
 .lb button{font:500 var(--s-1) var(--f-mono); color:var(--ink); background:var(--surface); border:1px solid var(--ink); padding:6px 12px; cursor:pointer}
-@media (max-width:760px){.gallery-wrap,.flight,.readout,.bode{padding-left:16px; padding-right:16px}}
+@media (max-width:760px){.gallery-wrap,.flight,.readout,.bode,.next{padding-left:16px; padding-right:16px}}
 @media (max-width:760px){
   .proj-body{grid-template-columns:1fr}
   .specs{border-right:0; border-bottom:1px solid var(--rule)}
@@ -253,13 +259,14 @@ footer .wrap{padding-block:24px; color:var(--muted); font-size:var(--s-1); borde
     <div class="wrap">
       <div class="sec-head">
         <h2 id="projects-h">Projects</h2>
-        <span class="label">5 entries · newest research first</span>
+        <span class="label">6 entries · newest first</span>
       </div>
 
       <div class="register">
         <table>
           <thead><tr><th>Date</th><th>Project</th><th>Focus</th></tr></thead>
           <tbody>
+            <tr><td>Fall 2026 — now</td><td><a href="#stella">RockSat Stella II Motor Control Board</a> <span class="tag wip">In progress</span></td><td>Power · BLDC motor control</td></tr>
             <tr><td>2025 — now</td><td><a href="#drone">Autonomous Data-Collection Drone</a></td><td>Research · power &amp; propulsion</td></tr>
             <tr><td>May 2026</td><td><a href="#rocksat">NASA RockSat Langmuir Probe Payload</a></td><td>Power integrity · analog front end</td></tr>
             <tr><td>Apr 2026</td><td><a href="#solar">12 V / 10 A Solar Charge Controller</a></td><td>DC/DC design · embedded</td></tr>
@@ -270,6 +277,90 @@ footer .wrap{padding-block:24px; color:var(--muted); font-size:var(--s-1); borde
       </div>
 
       <div class="projects">
+
+        <article class="proj" id="stella">
+          <div class="proj-head">
+            <div class="row"><span class="label">Fall 2026 — present</span><span class="tag wip">In progress</span><span class="tag">NASA · Team</span></div>
+            <h3>RockSat Stella II: CUBE Motor Control Board</h3>
+            <p class="tools">NJIT RockSat · Altium Designer · Power electronics · BLDC motor control · Board design</p>
+          </div>
+          <div class="proj-body">
+            <dl class="specs">
+              <div><dt>Mission</dt><dd>NASA sounding rocket, Wallops</dd></div>
+              <div><dt>Payload</dt><dd>CUBE, 1U deployable CubeSat</dd></div>
+              <div><dt>My part</dt><dd>Power &amp; motor control board</dd></div>
+              <div><dt>Battery</dt><dd>3S1P Li-ion, 9.0–12.6 V</dd></div>
+              <div><dt>Protection</dt><dd>20 A fuse, PFET, TVS, 8.1 A eFuse</dd></div>
+              <div><dt>UVLO</dt><dd>On 9.0 V / off 8.2 V</dd></div>
+              <div><dt>5 V rail</dt><dd>LM5164 buck, 396 kHz</dd></div>
+              <div><dt>3.3 V rail</dt><dd>TLV75533 LDO</dd></div>
+              <div><dt>Motors</dt><dd>3 × Maxon XFL 22S BLDC</dd></div>
+              <div><dt>Drivers</dt><dd>3 × Maxon ESCON2 Nano, 4 A fused</dd></div>
+              <div><dt>Telemetry</dt><dd>ADS7828 12-bit ADC, TCA9535 I/O</dd></div>
+              <div><dt>Status</dt><dd>Schematic, PDR stage</dd></div>
+            </dl>
+            <div class="desc">
+              <p>Stella II is this year's NJIT RockSat mission. A stationary payload called HUB ejects a 1U CubeSat, CUBE, during flight. Once free, CUBE detumbles and aligns itself with Earth's magnetic field using three reaction wheels, while an IMU and two magnetometer booms record data.</p>
+              <p>I'm designing CUBE's power and motor control board. It takes the battery, powers the three reaction-wheel motor drivers, and carries the control and telemetry signals between the flight computer and the motors.</p>
+              <ul>
+                <li>Power entry: an XT30 battery connector, a 20 A fuse, and a reverse-polarity P-MOSFET that also lets braking energy flow back into the battery. TVS diodes clamp transients, and a TPS259824 eFuse limits current to 8.1 A with a fast trip and auto-retry.</li>
+                <li>Flight safety: a separation-switch connector enables the board only after CUBE leaves HUB, and a SAFE jumper holds CUBE off on the ground until it's removed before flight. Undervoltage lockout turns the board on at 9.0 V and off at 8.2 V to protect the pack.</li>
+                <li>Rails: an LM5164 buck at 396 kHz with Type-3 ripple injection makes 5 V, and a TLV75533 LDO makes 3.3 V for the board's logic.</li>
+                <li>Motor channels: each of the three channels has a 4 A fuse and bulk capacitor feeding a Maxon ESCON2 Nano driver on an off-board carrier. The control lines have ESD protection and series resistors, and a pull-down keeps each driver off until the flight computer enables it.</li>
+                <li>Control and telemetry: a TCA9535 I/O expander sets enable and direction and reads each driver's ready flag. An ADS7828 12-bit ADC reads motor speed and current, battery voltage and eFuse current through RC filters. PWM speed set-points come straight from the Teensy 4.1 flight computer over the board-to-board connector.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="next" aria-label="Planned changes for the next revision">
+            <span class="label">In progress · next revision</span>
+            <ol>
+              <li><b>Sep switch bypass.</b> Add a second connector on the separation switch so the board can be powered with the switch bypassed for simulations and ground tests.</li>
+              <li><b>I²C to SPI.</b> Move the control interface between the flight computer and the board from I²C to SPI.</li>
+            </ol>
+          </div>
+          <div class="chain" aria-label="Power path, control and auxiliary rails">
+            <span class="label">Power</span>
+            <span class="blk">3S Li-ion</span><span class="arr">→</span>
+            <span class="blk">20 A fuse + PFET</span><span class="arr">→</span>
+            <span class="blk">eFuse 8.1 A</span><span class="arr">→</span>
+            <span class="blk">3 × 4 A fuse</span><span class="arr">→</span>
+            <span class="blk">ESCON2 Nano</span><span class="arr">→</span>
+            <span class="blk hot">Reaction wheels</span>
+            <span class="br"></span>
+            <span class="label">Control</span>
+            <span class="blk">Teensy 4.1</span><span class="arr">→</span>
+            <span class="blk">I²C → SPI (next rev)</span><span class="arr">→</span>
+            <span class="blk">I/O expander · ADC</span><span class="arr">→</span>
+            <span class="blk">Drivers</span>
+            <span class="br"></span>
+            <span class="label">Aux</span>
+            <span class="blk">LM5164</span><span class="arr">→</span>
+            <span class="blk">5 V</span><span class="arr">→</span>
+            <span class="blk">TLV75533</span><span class="arr">→</span>
+            <span class="blk">3.3 V</span>
+          </div>
+          <div class="gallery-wrap">
+            <span class="label">Schematics · 6 sheets</span>
+            <div class="gallery">
+              <figure><button type="button" class="ph"><img src="img/rs27-sch-top.png" width="1501" height="1365" loading="lazy" alt="Top-level hierarchical schematic of the CUBE power and motor board"></button><figcaption>Top level: five hierarchical sheets.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/rs27-sch-power-entry.png" width="2400" height="1855" loading="lazy" alt="Power entry schematic with fuse, reverse-polarity MOSFET, eFuse, separation switch and SAFE jumper"></button><figcaption>01 Power entry: fuse, reverse-polarity PFET, TVS, eFuse, sep switch and SAFE jumper.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/rs27-sch-rails.png" width="2400" height="1855" loading="lazy" alt="Rails schematic with LM5164 5 V buck and TLV75533 3.3 V LDO"></button><figcaption>02 Rails: LM5164 5 V buck and TLV75533 3.3 V LDO.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/rs27-sch-motor-channels.png" width="2170" height="2400" loading="lazy" alt="Three motor channels, each with a 4 A fuse, bulk capacitor, ESD protection and driver connectors"></button><figcaption>03 Motor channels: three fused driver feeds with ESD-protected control lines.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/rs27-sch-ctrl-telemetry.png" width="2400" height="1855" loading="lazy" alt="Control and telemetry schematic with TCA9535 I/O expander and ADS7828 ADC"></button><figcaption>04 Control and telemetry: I/O expander and 8-channel 12-bit ADC.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/rs27-sch-mcu-interface.png" width="2400" height="1855" loading="lazy" alt="MCU interface schematic with ERM8 board-to-board connector"></button><figcaption>05 MCU interface: board-to-board link to the flight computer.</figcaption></figure>
+            </div>
+          </div>
+          <div class="gallery-wrap">
+            <span class="label">Board &amp; mission context · from the PDR</span>
+            <div class="gallery">
+              <figure><button type="button" class="ph"><img src="img/rs27-fbd.png" width="1270" height="923" loading="lazy" alt="Functional block diagram of the CUBE power and motor board"></button><figcaption>Functional block diagram of the board, from the PDR.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/rs27-board-3d.jpg" width="540" height="585" loading="lazy" alt="Early 3D render of the CUBE power and motor board"></button><figcaption>Early 3D render of the board.</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/rs27-adcs-stack.jpg" width="1800" height="682" loading="lazy" alt="CAD render of the CUBE avionics stack with three reaction wheels"></button><figcaption>CUBE avionics stack and reaction wheels (team CAD).</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/rs27-cube-exploded.jpg" width="1800" height="1113" loading="lazy" alt="Exploded view of CUBE showing chassis, boards, reaction wheels, battery and magnetometer booms"></button><figcaption>Exploded view of CUBE (team CAD).</figcaption></figure>
+              <figure><button type="button" class="ph"><img src="img/rs27-conops.png" width="1800" height="798" loading="lazy" alt="Concept of operations timeline from launch to splashdown"></button><figcaption>Concept of operations: CUBE ejects at T+85 s and aligns to the magnetic field by T+140 s.</figcaption></figure>
+            </div>
+          </div>
+        </article>
 
         <article class="proj" id="drone">
           <div class="proj-head">
